@@ -1,5 +1,6 @@
 "use client";
-import {useEffect, useState} from "react";
+import { useEffect, useState } from "react";
+import { useSearchParams } from "next/navigation";
 import SubscribeSection from "./SubscribeSection";
 import { ChevronDown } from "lucide-react";
 import Banner from "@/public/images/banner-page.png";
@@ -7,23 +8,26 @@ import Image from "next/image";
 import Post from "./Post";
 import Filter from "./Filter";
 
+type JobItem = {
+  title: string;
+  summary: string;
+  location: string;
+  slug: string;
+};
+
 type ClientViewProps = {
   offset: string | null;
-  data: { title: string; summary: string; location: string; slug: string }[];
-  filterByFormula: string;
+  data: JobItem[];
 };
 
 export default function ClientView({
   offset: initialOffset,
   data,
-  filterByFormula,
 }: ClientViewProps) {
-  const [records, setRecords] =
-    useState<
-      { title: string; summary: string; location: string; slug: string }[]
-    >(data);
+  const searchParams = useSearchParams();
+  const [records, setRecords] = useState<JobItem[]>(data);
   const [offset, setOffset] = useState<string | null>(initialOffset);
-  const [, setLoading] = useState<boolean>(false);
+  const [loading, setLoading] = useState<boolean>(false);
 
   useEffect(() => {
     setOffset(initialOffset);
@@ -31,18 +35,17 @@ export default function ClientView({
 
   useEffect(() => {
     setRecords(data);
-  }, [data])
+  }, [data]);
 
   const loadMore = async () => {
-    if (!offset) {
-      return;
-    }
+    if (!offset || loading) return;
     setLoading(true);
     try {
-      const res = await fetch(
-        `/api/jobs?offset=${encodeURIComponent(offset)}&filterByFormula=${filterByFormula}`,
-        {},
-      ).then((res) => res.json());
+      const params = new URLSearchParams(searchParams.toString());
+      params.set("offset", offset);
+      const res = await fetch(`/api/jobs?${params.toString()}`).then((res) =>
+        res.json(),
+      );
       setRecords((prev) => [...prev, ...res.data]);
       setOffset(res.offset || null);
     } catch (error) {
@@ -81,8 +84,11 @@ export default function ClientView({
 
               {offset && (
                 <div className="mt-16 px-8" onClick={loadMore}>
-                  <button className="flex flex-col justify-center items-center text-light text-[22px] cursor-pointer text-center mx-auto lg:mx-0">
-                    Xem thêm
+                  <button
+                    disabled={loading}
+                    className="flex flex-col justify-center items-center text-light text-[22px] cursor-pointer text-center mx-auto lg:mx-0 disabled:opacity-50"
+                  >
+                    {loading ? "Đang tải..." : "Xem thêm"}
                     <ChevronDown className=" text-light" />
                   </button>
                 </div>
