@@ -34,7 +34,7 @@ export default async function Page({
     headers: {
       Authorization: `Bearer ${process.env.AIRTABLE_API_KEY}`,
     },
-    next: { revalidate: 0 },
+    next: { revalidate: 60, tags: ["jobs"] },
   }).then((res) => res.json());
 
   const records = response.records || [];
@@ -58,7 +58,7 @@ export default async function Page({
         headers: {
           Authorization: `Bearer ${process.env.AIRTABLE_API_KEY}`,
         },
-        next: { revalidate: 0 },
+        next: { revalidate: 300, tags: ["locations"] },
       },
     ).then((res) => res.json());
     (responseLocation.records || []).forEach((record) => {

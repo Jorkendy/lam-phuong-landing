@@ -1,26 +1,33 @@
+import { unstable_cache } from "next/cache";
 import { database } from "@/app/database";
 
-export async function GET() {
-  try {
+const getLocations = unstable_cache(
+  async () => {
     const response = await database(process.env.LOCATIONS_TABLE || "")
       .select({
         fields: ["Name"],
         filterByFormula: "{Status}='Active'",
       })
       .firstPage();
-    const data = response.map((item) => ({
+    return response.map((item) => ({
       name: item.fields["Name"],
       id: item.fields["Name"],
     }));
-    return new Response(JSON.stringify(data), {
-      status: 200,
-      headers: { "Content-Type": "application/json" },
+  },
+  ["locations"],
+  { revalidate: 300, tags: ["locations"] },
+);
+
+export async function GET() {
+  try {
+    const data = await getLocations();
+    return Response.json(data, {
+      headers: {
+        "Cache-Control": "public, s-maxage=300, stale-while-revalidate=86400",
+      },
     });
   } catch (error) {
-    console.log("=>(route.ts:203) error", error);
-    return new Response(JSON.stringify([]), {
-      status: 200,
-      headers: { "Content-Type": "application/json" },
-    });
+    console.error("[/api/locations] error", error);
+    return Response.json([], { status: 200 });
   }
 }

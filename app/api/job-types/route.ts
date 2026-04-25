@@ -1,26 +1,33 @@
+import { unstable_cache } from "next/cache";
 import { database } from "@/app/database";
 
-export async function GET() {
-  try {
+const getJobTypes = unstable_cache(
+  async () => {
     const response = await database(process.env.JOB_TYPES_TABLE || "")
       .select({
         fields: ["Name"],
         filterByFormula: "{Status}='Active'",
       })
       .firstPage();
-    const data = response.map((item) => ({
+    return response.map((item) => ({
       name: item.fields["Name"],
       id: item.fields["Name"],
     }));
-    return new Response(JSON.stringify(data), {
-      status: 200,
-      headers: { "Content-Type": "application/json" },
+  },
+  ["job-types"],
+  { revalidate: 300, tags: ["job-types"] },
+);
+
+export async function GET() {
+  try {
+    const data = await getJobTypes();
+    return Response.json(data, {
+      headers: {
+        "Cache-Control": "public, s-maxage=300, stale-while-revalidate=86400",
+      },
     });
   } catch (error) {
-    console.log("=>(route.ts:202) error", error);
-    return new Response(JSON.stringify([]), {
-      status: 200,
-      headers: { "Content-Type": "application/json" },
-    });
+    console.error("[/api/job-types] error", error);
+    return Response.json([], { status: 200 });
   }
 }
