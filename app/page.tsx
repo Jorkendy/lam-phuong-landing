@@ -1,26 +1,19 @@
-"use client";
-import { Suspense, useEffect } from "react";
+import { Suspense } from "react";
 import Banner from "./components/banner";
-import About from "./components//about";
+import About from "./components/about";
 import Services from "./components/services";
 import Parallax from "./components/parallax";
 import Studies from "./components/studies";
 import Careers from "./components/careers";
 import Partners from "./components/partners";
+import AOSInit from "./components/aos-init";
 import { RouterRoot } from "@/app/contants";
-import AOS from "aos";
-import "aos/dist/aos.css";
 
-const page = () => {
-  useEffect(() => {
-    AOS.init({
-      duration: 1000,
-      once: true,
-    });
-  }, []);
-
+export default function HomePage() {
   return (
     <main>
+      <AOSInit />
+
       <section id={RouterRoot.Home} className="section">
         <Suspense>
           <Banner />
@@ -50,6 +43,4 @@ const page = () => {
       </section>
     </main>
   );
-};
-
-export default page;
+}
