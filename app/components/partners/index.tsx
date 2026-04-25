@@ -46,10 +46,15 @@ const Partners = () => {
               </p>
             </div>
             <div className="col-span-2">
-              <div className="flex justify-center items-center gap-3 lg:gap-5 flex-wrap">
+              <div
+                role="list"
+                aria-label="Logo các đối tác của Lam Phương"
+                className="flex justify-center items-center gap-3 lg:gap-5 flex-wrap"
+              >
                 {PARTNERS.map(({ src, w, h }) => (
                   <div
                     key={src}
+                    role="listitem"
                     className="flex lg:w-[22%] w-[30%] justify-center"
                   >
                     <Image

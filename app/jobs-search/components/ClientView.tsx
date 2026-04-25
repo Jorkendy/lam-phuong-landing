@@ -56,7 +56,7 @@ export default function ClientView({
   };
 
   return (
-    <main className="pt-[116px]">
+    <main id="main-content" className="pt-[116px]">
       <div
         className="container mx-auto px-6 lg:px-0 relative"
         data-aos="fade-up"

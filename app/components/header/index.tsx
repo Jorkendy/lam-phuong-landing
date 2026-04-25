@@ -1,7 +1,7 @@
 "use client";
 import { RouterRoot } from "@/app/constants";
 import { usePathname, useRouter } from "next/navigation";
-import { Fragment, useCallback, useEffect, useState } from "react";
+import { Fragment, useCallback, useEffect, useRef, useState } from "react";
 import { clsx } from "clsx";
 import Link from "next/link";
 import Image from "next/image";
@@ -21,24 +21,57 @@ type MenuItem = (typeof MENU_ITEMS)[number];
 
 const SideBar = ({ activeMenu }: { activeMenu: string }) => {
   const [showSideBar, setShowSideBar] = useState(false);
+  const triggerRef = useRef<HTMLButtonElement>(null);
+  const closeRef = useRef<HTMLButtonElement>(null);
 
   const openSideBar = () => setShowSideBar(true);
-  const closeSideBar = () => setShowSideBar(false);
+  const closeSideBar = useCallback(() => setShowSideBar(false), []);
+
+  useEffect(() => {
+    if (!showSideBar) return;
+
+    const previousOverflow = document.body.style.overflow;
+    document.body.style.overflow = "hidden";
+    closeRef.current?.focus();
+
+    const onKey = (e: KeyboardEvent) => {
+      if (e.key === "Escape") {
+        e.preventDefault();
+        closeSideBar();
+      }
+    };
+    document.addEventListener("keydown", onKey);
+
+    return () => {
+      document.body.style.overflow = previousOverflow;
+      document.removeEventListener("keydown", onKey);
+      triggerRef.current?.focus();
+    };
+  }, [showSideBar, closeSideBar]);
 
   return (
     <Fragment>
       <button
+        ref={triggerRef}
         type="button"
         className="lg:hidden"
         onClick={openSideBar}
         aria-label="Mở menu"
+        aria-expanded={showSideBar}
+        aria-controls="mobile-menu"
       >
-        <svg width="16" height="12">
+        <svg width="16" height="12" aria-hidden="true">
           <use href="/images/icons.svg#icon-navbar"></use>
         </svg>
       </button>
       {showSideBar && (
-        <div className="fixed top-0 left-0 w-full h-screen bg-white p-8 mobile-bar">
+        <div
+          id="mobile-menu"
+          role="dialog"
+          aria-modal="true"
+          aria-label="Menu chính"
+          className="fixed top-0 left-0 w-full h-screen bg-white p-8 mobile-bar overflow-auto"
+        >
           <div className="flex justify-between items-center mb-5">
             <Link href="/">
               <Image
@@ -52,12 +85,13 @@ const SideBar = ({ activeMenu }: { activeMenu: string }) => {
               />
             </Link>
             <button
+              ref={closeRef}
               type="button"
               className="lg:hidden relative z-9"
               onClick={closeSideBar}
               aria-label="Đóng menu"
             >
-              <svg width="14" height="14">
+              <svg width="14" height="14" aria-hidden="true">
                 <use href="/images/icons.svg#icon-close"></use>
               </svg>
             </button>

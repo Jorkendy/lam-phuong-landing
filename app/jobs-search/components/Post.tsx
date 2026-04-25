@@ -9,18 +9,21 @@ type PostProps = {
 
 export default function Post({ slug, title, summary, location }: PostProps) {
   return (
-    <div className="group rounded-3xl p-4 border border-light shadow-[0_2px_0_rgba(66,157,165,1)] flex flex-col gap-4 mb-6 bg-white">
-      <Link href={`/jobs-search/chi-tiet/${slug}`}>
-        <h2 className="group-hover:text-light hover:text-light text-[24px] lg:text-[36px] leading-9">
+    <article className="group rounded-3xl p-4 border border-light shadow-[0_2px_0_rgba(66,157,165,1)] flex flex-col gap-4 mb-6 bg-white">
+      <h2 className="text-[24px] lg:text-[36px] leading-9">
+        <Link
+          href={`/jobs-search/chi-tiet/${slug}`}
+          className="group-hover:text-light hover:text-light"
+        >
           {title}
-        </h2>
-      </Link>
+        </Link>
+      </h2>
       <p className="line-clamp-3">{summary}</p>
       <div className="flex justify-between items-center">
-        <div className="group">
+        <div>
           {!!location && (
             <div className="flex items-center gap-2">
-              <svg width="13" height="18">
+              <svg width="13" height="18" aria-hidden="true">
                 <use href="/images/icons.svg#icon-location" />
               </svg>
               <p className="text-light">{location}</p>
@@ -28,12 +31,16 @@ export default function Post({ slug, title, summary, location }: PostProps) {
           )}
         </div>
 
-        <Link href="https://airtable.com/applRt3FQ5QTJY6sn/pag3suI5n5zwMkT6o/form">
-          <button className="cursor-pointer text-light lg:text-[18px] border border-light rounded-3xl px-4 py-1 hover:bg-light hover:text-white">
-            Apply Now
-          </button>
+        <Link
+          href="https://airtable.com/applRt3FQ5QTJY6sn/pag3suI5n5zwMkT6o/form"
+          target="_blank"
+          rel="noopener noreferrer"
+          aria-label={`Ứng tuyển vị trí ${title}`}
+          className="cursor-pointer text-light lg:text-[18px] border border-light rounded-3xl px-4 py-1 hover:bg-light hover:text-white inline-block"
+        >
+          Apply Now
         </Link>
       </div>
-    </div>
+    </article>
   );
 }

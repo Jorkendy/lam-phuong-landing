@@ -27,7 +27,7 @@ const Banner = () => {
 
   useGSAP(() => {
     gsap.fromTo(
-      ".heading h2, .button-link",
+      ".heading > span, .button-link",
       {
         visibility: "visible",
         opacity: 0,
@@ -70,20 +70,20 @@ const Banner = () => {
     <div className="banner lg:h-screen h-[465px] relative flex flex-col justify-end items-center">
       <div className="container relative z-1 px-6 lg:px-8 bottom-8 mx-auto">
         <div className="flex flex-col lg:flex-row justify-between lg:items-end items-start gap-3">
-          <div className="heading">
-            <h2 className="uppercase text-[32px] lg:text-[64px] font-bold lg:leading-20 leading-10">
+          <h1 className="heading uppercase text-[32px] lg:text-[64px] font-bold lg:leading-20 leading-10 m-0">
+            <span className="block">
               make it <span className="text-primary">simple.</span>
-            </h2>
-            <h2 className="uppercase text-[32px] lg:text-[64px] font-bold lg:leading-20 leading-10">
+            </span>
+            <span className="block">
               make it <span className="text-primary">memorable.</span>
-            </h2>
-          </div>
+            </span>
+          </h1>
           <button
             className="button cursor-pointer button-link"
             onClick={handleScroll}
             aria-label="Cuộn xuống phần Giới thiệu"
           >
-            <svg ref={arrowRef} width="70" height="22">
+            <svg ref={arrowRef} width="70" height="22" aria-hidden="true">
               <use href="/images/icons.svg#icon-arrow"></use>
             </svg>
           </button>

@@ -10,7 +10,7 @@ import { RouterRoot } from "@/app/constants";
 
 export default function HomePage() {
   return (
-    <main>
+    <main id="main-content">
       <section id={RouterRoot.Home} className="section">
         <Suspense>
           <Banner />

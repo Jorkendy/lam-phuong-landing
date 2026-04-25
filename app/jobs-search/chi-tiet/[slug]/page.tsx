@@ -60,7 +60,7 @@ export default async function Page({
   const data = (await getJob(slug)) || ({} as JobDetail);
 
   return (
-    <main className="detail pt-[116px] pb-8 lg:pb-0">
+    <main id="main-content" className="detail pt-[116px] pb-8 lg:pb-0">
       <div className="container mx-auto px-6 lg:px-0 relative min-h-screen">
         <div className="lg:max-w-6xl mx-auto lg:py-16 py-5 relative">
           <div className="flex flex-col lg:grid lg:grid-cols-3 gap-8 mt-5 lg:mt-16">
@@ -85,7 +85,7 @@ export default async function Page({
                 {!!data.location && (
                   <div className="group min-w-[150px]">
                     <div className="flex items-center gap-2">
-                      <svg width="13" height="18">
+                      <svg width="13" height="18" aria-hidden="true">
                         <use href="/images/icons.svg#icon-location"></use>
                       </svg>
                       <p className="text-light">{data.location}</p>
@@ -103,10 +103,13 @@ export default async function Page({
                 <h4 className="text-light text-[22px] mb-3">Benefits</h4>
                 <Markdown>{data.benefits}</Markdown>
 
-                <Link href="https://airtable.com/applRt3FQ5QTJY6sn/pag3suI5n5zwMkT6o/form">
-                  <button className="mt-10 cursor-pointer text-white lg:text-[18px] border border-light bg-light rounded-3xl px-4 py-2 hover:bg-white hover:text-light">
-                    Apply Now
-                  </button>
+                <Link
+                  href="https://airtable.com/applRt3FQ5QTJY6sn/pag3suI5n5zwMkT6o/form"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="mt-10 self-start cursor-pointer text-white lg:text-[18px] border border-light bg-light rounded-3xl px-4 py-2 hover:bg-white hover:text-light inline-block"
+                >
+                  Apply Now
                 </Link>
               </div>
             </div>
