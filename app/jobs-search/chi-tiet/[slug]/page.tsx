@@ -51,6 +51,41 @@ export async function generateMetadata({
   };
 }
 
+function buildJobPostingLd(slug: string, data: JobDetail) {
+  const siteUrl =
+    process.env.NEXT_PUBLIC_SITE_URL || "https://lamphuong.com.vn";
+  const description = [data.description, data.requirements, data.benefits]
+    .filter(Boolean)
+    .join("\n\n");
+
+  return {
+    "@context": "https://schema.org",
+    "@type": "JobPosting",
+    title: data.title,
+    description,
+    datePosted: new Date().toISOString().split("T")[0],
+    employmentType: "FULL_TIME",
+    hiringOrganization: {
+      "@type": "Organization",
+      name: "Lam Phương",
+      sameAs: siteUrl,
+      logo: `${siteUrl}/images/logo.png`,
+    },
+    jobLocation: data.location
+      ? {
+          "@type": "Place",
+          address: {
+            "@type": "PostalAddress",
+            addressLocality: data.location,
+            addressCountry: "VN",
+          },
+        }
+      : undefined,
+    directApply: false,
+    url: `${siteUrl}/jobs-search/chi-tiet/${slug}`,
+  };
+}
+
 export default async function Page({
   params,
 }: {
@@ -58,9 +93,16 @@ export default async function Page({
 }) {
   const { slug } = await params;
   const data = (await getJob(slug)) || ({} as JobDetail);
+  const jsonLd = data.title ? buildJobPostingLd(slug, data) : null;
 
   return (
     <main id="main-content" className="detail pt-[116px] pb-8 lg:pb-0">
+      {jsonLd && (
+        <script
+          type="application/ld+json"
+          dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
+        />
+      )}
       <div className="container mx-auto px-6 lg:px-0 relative min-h-screen">
         <div className="lg:max-w-6xl mx-auto lg:py-16 py-5 relative">
           <div className="flex flex-col lg:grid lg:grid-cols-3 gap-8 mt-5 lg:mt-16">
