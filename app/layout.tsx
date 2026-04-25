@@ -1,11 +1,8 @@
 import { ReactNode } from "react";
 import type { Metadata, Viewport } from "next";
 import "../styles/globals.css";
-import Airtable from "airtable";
 import Header from "@/app/components/header";
 import Footer from "@/app/components/footer";
-
-Airtable.configure({ apiKey: process.env.AIRTABLE_API_KEY });
 
 const siteUrl = process.env.NEXT_PUBLIC_SITE_URL || "https://lamphuong.com.vn";
 const siteName = "Lam Phương";

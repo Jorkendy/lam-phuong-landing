@@ -7,22 +7,22 @@ export const enum FilterKeyEnum {
 
 export const CONFIG_BY_KEY = {
   [FilterKeyEnum.JobTypes]: {
-    api: "/api/job-types",
+    api: "/api/filters/job-types",
     key: "job_types",
     title: "Loại công việc",
   },
   [FilterKeyEnum.JobCategories]: {
-    api: "/api/job-categories",
+    api: "/api/filters/job-categories",
     key: "job_categories",
     title: "Ngành nghề",
   },
   [FilterKeyEnum.ProductGroups]: {
-    api: "/api/product-groups",
+    api: "/api/filters/product-groups",
     key: "product_groups",
     title: "Nhóm sản phẩm",
   },
   [FilterKeyEnum.Locations]: {
-    api: "/api/locations",
+    api: "/api/filters/locations",
     key: "locations",
     title: "Địa điểm",
   },
