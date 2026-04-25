@@ -1,11 +1,18 @@
-import React from 'react'
+import Image from "next/image";
 
-const index = () => {
+const Parallax = () => {
   return (
     <div className="mt-14">
-      <img src="../images/bg-parallax.png" alt="" className="w-full object-cover lg:h-[810px] h-[235px]" />
+      <Image
+        src="/images/bg-parallax.png"
+        alt=""
+        width={1920}
+        height={811}
+        sizes="100vw"
+        className="w-full object-cover lg:h-[810px] h-[235px]"
+      />
     </div>
-  )
-}
+  );
+};
 
-export default index
+export default Parallax;

@@ -1,8 +1,8 @@
-import { RouterRoot } from "@/app/contants";
-import React, { RefObject } from "react";
+import Image from "next/image";
 import Link from "next/link";
+import { RouterRoot } from "@/app/contants";
 
-const index = () => {
+const Careers = () => {
   return (
     <div id={RouterRoot.Career} className="pt-10 relative">
       <div className="container mx-auto px-8 lg:px-0" data-aos="fade-up">
@@ -15,7 +15,7 @@ const index = () => {
           </div>
           <div className="flex flex-col-reverse lg:grid lg:grid-cols-2 items-start gap-8">
             <div className="flex flex-col gap-4">
-              <h2 className="text-light lg:text[48px] text-[32px] uppercase">
+              <h2 className="text-light lg:text-[48px] text-[32px] uppercase">
                 Đồng đội nhập trận!
               </h2>
               <p>
@@ -33,7 +33,14 @@ const index = () => {
               </Link>
             </div>
             <div className="lg:translate-y-[-100px]">
-              <img src="../images/image-7.png" alt="" />
+              <Image
+                src="/images/image-7.png"
+                alt="Đội ngũ Lam Phương"
+                width={566}
+                height={490}
+                sizes="(max-width: 1024px) 100vw, 566px"
+                className="w-full h-auto"
+              />
             </div>
           </div>
         </div>
@@ -42,4 +49,4 @@ const index = () => {
   );
 };
 
-export default index;
+export default Careers;

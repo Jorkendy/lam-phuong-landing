@@ -46,7 +46,7 @@ export default async function Page({
                     <div className="group min-w-[150px]">
                       <div className="flex items-center gap-2">
                         <svg width="13" height="18">
-                          <use xlinkHref="../../images/icons.svg#icon-location"></use>
+                          <use href="/images/icons.svg#icon-location"></use>
                         </svg>
                         <p className="text-light">{data.location}</p>
                       </div>

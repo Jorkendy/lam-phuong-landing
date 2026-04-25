@@ -32,7 +32,7 @@ export default function SubscribeSection() {
       <div className="grid grid-cols-3 mt-3 gap-2 w-full">
         <div className="col-span-2 relative w-full flex items-center gap-3">
           <svg width="13" height="11" className="absolute left-3 top-3">
-            <use xlinkHref="../images/icons.svg#icon-evelop"></use>
+            <use href="/images/icons.svg#icon-evelop"></use>
           </svg>
           <input
             value={email}

@@ -21,7 +21,7 @@ export default function Post({ slug, title, summary, location }: PostProps) {
           {!!location && (
             <div className="flex items-center gap-2">
               <svg width="13" height="18">
-                <use xlinkHref="../images/icons.svg#icon-location" />
+                <use href="/images/icons.svg#icon-location" />
               </svg>
               <p className="text-light">{location}</p>
             </div>
