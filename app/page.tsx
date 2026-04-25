@@ -6,7 +6,7 @@ import Parallax from "./components/parallax";
 import Studies from "./components/studies";
 import Careers from "./components/careers";
 import Partners from "./components/partners";
-import { RouterRoot } from "@/app/contants";
+import { RouterRoot } from "@/app/constants";
 
 export default function HomePage() {
   return (

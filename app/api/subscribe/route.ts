@@ -1,29 +1,31 @@
 import { database } from "@/app/database";
 
+const EMAIL_RE = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+
 export async function POST(request: Request) {
-  const { email } = await request.json();
+  let body: unknown;
   try {
-    await database("tble5saHr6dCQlOeS").create([
-      {
-        fields: { Email: email },
-      },
+    body = await request.json();
+  } catch {
+    return Response.json({ ok: false, error: "invalid_body" }, { status: 400 });
+  }
+
+  const email =
+    typeof body === "object" && body !== null && "email" in body
+      ? String((body as { email: unknown }).email).trim()
+      : "";
+
+  if (!EMAIL_RE.test(email) || email.length > 254) {
+    return Response.json({ ok: false, error: "invalid_email" }, { status: 400 });
+  }
+
+  try {
+    await database(process.env.SUBSCRIBERS_TABLE || "tble5saHr6dCQlOeS").create([
+      { fields: { Email: email } },
     ]);
-    return new Response(JSON.stringify({ ok: true }), {
-      status: 200,
-      headers: { "Content-Type": "application/json" },
-    });
-  } catch (error: any) {
-    console.log("=>(route.ts:18) error", error);
-    return new Response(
-      JSON.stringify({
-        ok: false,
-        error: error.message,
-        keys: Object.keys(error),
-      }),
-      {
-        status: 200,
-        headers: { "Content-Type": "application/json" },
-      },
-    );
+    return Response.json({ ok: true });
+  } catch (error) {
+    console.error("[/api/subscribe] error", error);
+    return Response.json({ ok: false, error: "server_error" }, { status: 500 });
   }
 }

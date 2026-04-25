@@ -1,5 +1,5 @@
 import Image from "next/image";
-import { RouterRoot } from "@/app/contants";
+import { RouterRoot } from "@/app/constants";
 
 const SERVICES = [
   {

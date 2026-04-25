@@ -1,5 +1,5 @@
 "use client";
-import { RouterRoot } from "@/app/contants";
+import { RouterRoot } from "@/app/constants";
 import { usePathname, useRouter } from "next/navigation";
 import { Fragment, useCallback, useEffect, useState } from "react";
 import { clsx } from "clsx";

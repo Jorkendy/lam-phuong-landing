@@ -1,5 +1,5 @@
 "use client";
-import { RouterRoot } from "@/app/contants";
+import { RouterRoot } from "@/app/constants";
 import { usePathname, useRouter, useSearchParams } from "next/navigation";
 import Image from "next/image";
 import { useCallback, useEffect, useRef } from "react";

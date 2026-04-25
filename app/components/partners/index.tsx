@@ -1,5 +1,5 @@
 import Image from "next/image";
-import { RouterRoot } from "@/app/contants";
+import { RouterRoot } from "@/app/constants";
 
 const PARTNERS = [
   { src: "/images/logo-1.png", w: 147, h: 48 },

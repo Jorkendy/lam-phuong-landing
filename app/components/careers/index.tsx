@@ -1,6 +1,6 @@
 import Image from "next/image";
 import Link from "next/link";
-import { RouterRoot } from "@/app/contants";
+import { RouterRoot } from "@/app/constants";
 
 const Careers = () => {
   return (

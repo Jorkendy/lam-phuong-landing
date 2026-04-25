@@ -1,6 +1,6 @@
 import Image from "next/image";
 import dynamic from "next/dynamic";
-import { RouterRoot } from "@/app/contants";
+import { RouterRoot } from "@/app/constants";
 import type { Study } from "./StudiesSwiper";
 
 const StudiesSwiper = dynamic(() => import("./StudiesSwiper"));
