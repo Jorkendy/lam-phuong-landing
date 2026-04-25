@@ -6,14 +6,11 @@ import Parallax from "./components/parallax";
 import Studies from "./components/studies";
 import Careers from "./components/careers";
 import Partners from "./components/partners";
-import AOSInit from "./components/aos-init";
 import { RouterRoot } from "@/app/contants";
 
 export default function HomePage() {
   return (
     <main>
-      <AOSInit />
-
       <section id={RouterRoot.Home} className="section">
         <Suspense>
           <Banner />

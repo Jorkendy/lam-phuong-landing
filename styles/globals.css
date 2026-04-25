@@ -174,8 +174,22 @@
     before:lg:block z-0;
   }
   footer {
-    @apply before:absolute before:bg-[url('/images/bg-footer.png')] 
-          before:bg-contain before:bg-center before:bg-no-repeat before:bottom-[-20px] before:left-0  
+    @apply before:absolute before:bg-[url('/images/bg-footer.png')]
+          before:bg-contain before:bg-center before:bg-no-repeat before:bottom-[-20px] before:left-0
           before:w-full before:h-[30px] xl:before:h-[70px];
+  }
+
+  @media (prefers-reduced-motion: no-preference) {
+    [data-aos="fade-up"] {
+      opacity: 0;
+      transform: translateY(40px);
+      transition:
+        opacity 1s ease-out,
+        transform 1s ease-out;
+    }
+    [data-aos="fade-up"].aos-shown {
+      opacity: 1;
+      transform: translateY(0);
+    }
   }
 }

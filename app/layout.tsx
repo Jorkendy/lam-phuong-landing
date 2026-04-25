@@ -3,6 +3,7 @@ import type { Metadata, Viewport } from "next";
 import "../styles/globals.css";
 import Header from "@/app/components/header";
 import Footer from "@/app/components/footer";
+import ScrollReveal from "@/app/components/scroll-reveal";
 
 const siteUrl = process.env.NEXT_PUBLIC_SITE_URL || "https://lamphuong.com.vn";
 const siteName = "Lam Phương";
@@ -87,6 +88,7 @@ export default function RootLayout({ children }: { children: ReactNode }) {
         {children}
 
         <Footer />
+        <ScrollReveal />
       </body>
     </html>
   );
