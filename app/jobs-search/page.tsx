@@ -1,9 +1,24 @@
+import type { Metadata } from "next";
 import ClientView from "./components/ClientView";
 import { GetRecordsResponse, JobFields, LocationFields } from "@/type";
 import { buildJobsFilterFormula, jobListFieldsQuery } from "./lib/filter";
 
 const BASE_URL = `https://api.airtable.com/v0/${process.env.BASE_ID}`;
 const PAGE_SIZE = 5;
+
+export const metadata: Metadata = {
+  title: "Tuyển dụng",
+  description:
+    "Cơ hội nghề nghiệp tại Lam Phương – đồng hành cùng đội ngũ marketing game hàng đầu Việt Nam. Tìm kiếm và ứng tuyển vị trí phù hợp ngay hôm nay.",
+  alternates: { canonical: "/jobs-search" },
+  openGraph: {
+    title: "Tuyển dụng | Lam Phương",
+    description:
+      "Cơ hội nghề nghiệp tại Lam Phương – đồng hành cùng đội ngũ marketing game hàng đầu Việt Nam.",
+    url: "/jobs-search",
+    type: "website",
+  },
+};
 
 export default async function Page({
   searchParams,
