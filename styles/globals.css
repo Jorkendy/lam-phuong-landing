@@ -1,7 +1,5 @@
 @import "tailwindcss";
 
-@plugin 'tailwindcss-animate';
-
 @custom-variant dark (&:is(.dark *));
 :root {
   --background: oklch(1 0 0);
@@ -158,24 +156,28 @@
     @apply before:absolute before:bg-[url('/images/bg-service.png')] before:bg-cover lg:before:top-[-100px] 
           lg:before:right-0 before:right-[-50px] before:w-[650px] before:h-[700px] before:lg:block before:hidden;
   }
-  .carrers .container{
-    @apply before:absolute before:bg-[url('/images/bg-service.png')] before:bg-cover lg:before:top-[300px]  before:top-[180px] 
-    lg:before:left-[-100px] before:left-[-150px] lg:before:w-[650px] before:w-[550px] lg:before:h-[700px] before:h-[450px] 
-    before:lg:block z-0;
-  }
-  .carrers .container{
-    @apply after:absolute after:bg-[url('/images/bg-detail.png')] after:bg-cover lg:before:top-[300px] after:top-[1000px] 
-    lg:after:left-[-100px] after:left-[-150px] lg:after:w-[650px] after:w-[550px] lg:after:h-[700px] after:h-[450px] 
-    after:lg:block z-0;
-  }
   .detail .container{
     @apply before:absolute before:bg-[url('/images/bg-detail.png')] before:bg-cover lg:before:top-[140px] before:top-[120px] 
     lg:before:left-[-330px] before:left-[-150px] lg:before:w-[750px] before:w-[550px] lg:before:h-[600px] before:h-[450px] 
     before:lg:block z-0;
   }
   footer {
-    @apply before:absolute before:bg-[url('/images/bg-footer.png')] 
-          before:bg-contain before:bg-center before:bg-no-repeat before:bottom-[-20px] before:left-0  
+    @apply before:absolute before:bg-[url('/images/bg-footer.png')]
+          before:bg-contain before:bg-center before:bg-no-repeat before:bottom-[-20px] before:left-0
           before:w-full before:h-[30px] xl:before:h-[70px];
+  }
+
+  @media (prefers-reduced-motion: no-preference) {
+    [data-aos="fade-up"] {
+      opacity: 0;
+      transform: translateY(40px);
+      transition:
+        opacity 1s ease-out,
+        transform 1s ease-out;
+    }
+    [data-aos="fade-up"].aos-shown {
+      opacity: 1;
+      transform: translateY(0);
+    }
   }
 }
