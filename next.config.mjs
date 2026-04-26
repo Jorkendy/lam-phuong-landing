@@ -41,6 +41,7 @@ const nextConfig = {
       },
     ];
   },
+  output: 'standalone', // Bắt buộc để Dockerfile trên hoạt động
 };
 
 export default nextConfig;
