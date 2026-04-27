@@ -42,6 +42,11 @@ const nextConfig = {
     ];
   },
   output: 'standalone', // Bắt buộc để Dockerfile trên hoạt động
+  logging: {
+    fetches: {
+      fullUrl: true, // log full URL của mỗi fetch
+    },
+  },
 };
 
 export default nextConfig;
