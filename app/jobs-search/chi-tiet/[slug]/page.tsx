@@ -1,7 +1,34 @@
+import { cache } from "react";
 import type { Metadata } from "next";
 import Link from "next/link";
 import Markdown from "react-markdown";
 import SubscribeSection from "../../components/SubscribeSection";
+import { getJobDetail } from "@/app/api/job/service";
+import { GetRecordsResponse, JobFields } from "@/type";
+
+export const revalidate = 300;
+
+export async function generateStaticParams() {
+  const BASE_URL = `https://api.airtable.com/v0/${process.env.BASE_ID}`;
+  const slugs: { slug: string }[] = [];
+  let offset: string | undefined;
+
+  do {
+    const url = `${BASE_URL}/${process.env.JOBS_TABLE}?fields[]=Slug&pageSize=100${offset ? `&offset=${offset}` : ""}`;
+    const res = await fetch(url, {
+      headers: { Authorization: `Bearer ${process.env.AIRTABLE_API_KEY}` },
+    });
+    const data: GetRecordsResponse<JobFields> = await res.json();
+    for (const record of data.records || []) {
+      if (record.fields["Slug"]) {
+        slugs.push({ slug: `${record.fields["Slug"]}-${record.id}` });
+      }
+    }
+    offset = data.offset;
+  } while (offset);
+
+  return slugs;
+}
 
 type JobDetail = {
   title?: string;
@@ -12,17 +39,13 @@ type JobDetail = {
   tags?: string[];
 };
 
-async function getJob(slug: string): Promise<JobDetail | null> {
+const getJob = cache(async (slug: string): Promise<JobDetail | null> => {
   try {
-    const res = await fetch(
-      `${process.env.NEXT_PUBLIC_SITE_URL}/api/job/${slug}`,
-    );
-    if (!res.ok) return null;
-    return (await res.json()) as JobDetail;
+    return await getJobDetail(slug);
   } catch {
     return null;
   }
-}
+});
 
 export async function generateMetadata({
   params,
