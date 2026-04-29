@@ -7,6 +7,29 @@ RUN npm install -g pnpm && pnpm install --frozen-lockfile
 
 FROM base AS builder
 WORKDIR /app
+
+# Build args — truyền vào từ Coolify
+ARG AIRTABLE_API_KEY
+ARG BASE_ID
+ARG JOBS_TABLE
+ARG JOB_CATEGORIES_TABLE
+ARG JOB_TYPES_TABLE
+ARG LOCATIONS_TABLE
+ARG NEXT_PUBLIC_SITE_URL
+ARG PRODUCT_GROUPS_TABLE
+ARG SUBSCRIBERS_TABLE
+
+# Set thành ENV để Next.js đọc được lúc build
+ENV AIRTABLE_API_KEY=$AIRTABLE_API_KEY
+ENV BASE_ID=$BASE_ID
+ENV JOBS_TABLE=$JOBS_TABLE
+ENV JOB_CATEGORIES_TABLE=$JOB_CATEGORIES_TABLE
+ENV JOB_TYPES_TABLE=$JOB_TYPES_TABLE
+ENV LOCATIONS_TABLE=$LOCATIONS_TABLE
+ENV NEXT_PUBLIC_SITE_URL=$NEXT_PUBLIC_SITE_URL
+ENV PRODUCT_GROUPS_TABLE=$PRODUCT_GROUPS_TABLE
+ENV SUBSCRIBERS_TABLE=$SUBSCRIBERS_TABLE
+
 COPY --from=deps /app/node_modules ./node_modules
 COPY . .
 RUN npm install -g pnpm && pnpm run build
@@ -23,18 +46,4 @@ RUN apk add --no-cache bash curl && \
 RUN addgroup --system --gid 1001 nodejs
 RUN adduser --system --uid 1001 nextjs
 
-COPY --from=builder /app/public ./public
-COPY --from=builder --chown=nextjs:nodejs /app/.next/standalone ./
-COPY --from=builder --chown=nextjs:nodejs /app/.next/static ./.next/static
-
-USER nextjs
-EXPOSE 3000
-ENV PORT=3000
-
-# Inject secrets từ Infisical lúc runtime
-CMD ["sh", "-c", "infisical run \
-  --projectId=$INFISICAL_PROJECT_ID \
-  --env=$INFISICAL_ENV \
-  --client-id=$INFISICAL_CLIENT_ID \
-  --client-secret=$INFISICAL_CLIENT_SECRET \
-  -- node server.js"]
+COPY --
