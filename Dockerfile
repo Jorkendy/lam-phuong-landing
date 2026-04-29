@@ -8,7 +8,6 @@ RUN npm install -g pnpm && pnpm install --frozen-lockfile
 FROM base AS builder
 WORKDIR /app
 
-# Build args — truyền vào từ Coolify
 ARG AIRTABLE_API_KEY
 ARG BASE_ID
 ARG JOBS_TABLE
@@ -19,7 +18,6 @@ ARG NEXT_PUBLIC_SITE_URL
 ARG PRODUCT_GROUPS_TABLE
 ARG SUBSCRIBERS_TABLE
 
-# Set thành ENV để Next.js đọc được lúc build
 ENV AIRTABLE_API_KEY=$AIRTABLE_API_KEY
 ENV BASE_ID=$BASE_ID
 ENV JOBS_TABLE=$JOBS_TABLE
@@ -38,7 +36,6 @@ FROM base AS runner
 WORKDIR /app
 ENV NODE_ENV=production
 
-# Cài Infisical CLI
 RUN apk add --no-cache bash curl && \
     curl -1sLf 'https://dl.cloudsmith.io/public/infisical/infisical-cli/setup.alpine.sh' | bash && \
     apk add --no-cache infisical
@@ -46,4 +43,12 @@ RUN apk add --no-cache bash curl && \
 RUN addgroup --system --gid 1001 nodejs
 RUN adduser --system --uid 1001 nextjs
 
-COPY --
+COPY --from=builder /app/public ./public
+COPY --from=builder --chown=nextjs:nodejs /app/.next/standalone ./
+COPY --from=builder --chown=nextjs:nodejs /app/.next/static ./.next/static
+
+USER nextjs
+EXPOSE 3000
+ENV PORT=3000
+
+CMD ["sh", "-c", "infisical run --projectId=$INFISICAL_PROJECT_ID --env=$INFISICAL_ENV --client-id=$INFISICAL_CLIENT_ID --client-secret=$INFISICAL_CLIENT_SECRET -- node server.js"]
