@@ -1,5 +1,5 @@
 import { unstable_cache } from "next/cache";
-import { database } from "@/app/database";
+import { getDatabase } from "@/app/database";
 import { FieldSet } from "airtable";
 
 interface NamedRecord extends FieldSet {
@@ -8,6 +8,7 @@ interface NamedRecord extends FieldSet {
 
 export const getJobDetail = unstable_cache(
   async (slug: string) => {
+    const database = getDatabase();
     const chunks = slug.split("-");
     const recordID = chunks[chunks.length - 1];
 

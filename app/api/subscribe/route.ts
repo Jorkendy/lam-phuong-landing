@@ -1,9 +1,10 @@
-import { database } from "@/app/database";
+import { getDatabase } from "@/app/database";
 
 const EMAIL_RE = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
 
 export async function POST(request: Request) {
   let body: unknown;
+  const database = getDatabase();
   try {
     body = await request.json();
   } catch {

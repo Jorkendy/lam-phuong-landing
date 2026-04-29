@@ -1,5 +1,5 @@
 import { unstable_cache } from "next/cache";
-import { database } from "@/app/database";
+import { getDatabase } from "@/app/database";
 
 const TABLE_BY_TYPE: Record<string, string | undefined> = {
   "job-types": process.env.JOB_TYPES_TABLE,
@@ -10,6 +10,7 @@ const TABLE_BY_TYPE: Record<string, string | undefined> = {
 
 const getFilterValues = unstable_cache(
   async (table: string) => {
+    const database = getDatabase();
     const records = await database(table)
       .select({
         fields: ["Name"],
