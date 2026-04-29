@@ -51,4 +51,16 @@ USER nextjs
 EXPOSE 3000
 ENV PORT=3000
 
-CMD ["sh", "-c", "infisical run --projectId=$INFISICAL_PROJECT_ID --env=$INFISICAL_ENV --client-id=$INFISICAL_CLIENT_ID --client-secret=$INFISICAL_CLIENT_SECRET -- node server.js"]
+CMD ["sh", "-c", "\
+  TOKEN=$(infisical login \
+    --method=universal-auth \
+    --client-id=$INFISICAL_CLIENT_ID \
+    --client-secret=$INFISICAL_CLIENT_SECRET \
+    --domain=https://secrets.vinhpham.com.vn \
+    --plain --silent) && \
+  infisical run \
+    --token=$TOKEN \
+    --projectId=$INFISICAL_PROJECT_ID \
+    --env=$INFISICAL_ENV \
+    --domain=https://secrets.vinhpham.com.vn \
+    -- node server.js"]
