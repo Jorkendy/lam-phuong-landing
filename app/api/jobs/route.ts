@@ -61,6 +61,7 @@ export async function GET(request: NextRequest) {
       summary: fields["Mô tả công việc"],
       location: locationMap[fields["Khu vực"]?.[0]] || "",
       slug: `${fields["Slug"]}-${id}`,
+      deadline: fields["Hạn chót nhận"] || null,
     }));
 
     return new Response(

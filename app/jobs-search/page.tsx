@@ -71,6 +71,7 @@ export default async function Page({
     summary: fields["Mô tả công việc"],
     location: locationMap[fields["Khu vực"]?.[0]] || "",
     slug: `${fields["Slug"]}-${id}`,
+    deadline: fields["Hạn chót nhận"] || null,
   }));
 
   return <ClientView data={data} offset={response.offset || null} />;

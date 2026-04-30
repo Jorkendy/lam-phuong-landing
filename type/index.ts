@@ -16,6 +16,7 @@ export interface CareerListItem {
   summary: string;
   slug: string;
   location: string;
+  deadline?: string;
 }
 
 export interface JobFields extends FieldSet {
@@ -23,6 +24,7 @@ export interface JobFields extends FieldSet {
   "Mô tả công việc": string;
   "Khu vực": string[];
   Slug: string;
+  "Hạn chót nhận"?: string;
 }
 
 export interface LocationFields extends FieldSet {

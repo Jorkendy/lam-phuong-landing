@@ -19,6 +19,7 @@ export const JOB_LIST_FIELDS = [
   "Mô tả công việc",
   "Khu vực",
   "Slug",
+  "Hạn chót nhận",
 ] as const;
 
 export function jobListFieldsQuery(): string {
@@ -45,7 +46,11 @@ function readParam(params: ParamsLike, key: string): string | undefined {
 }
 
 export function buildJobsFilterFormula(params: ParamsLike): string {
-  const groups: string[] = [`{Status}="Approved"`];
+  const groups: string[] = [
+    `{Status}="Approved"`,
+    // Chỉ lấy job chưa hết hạn: không có deadline hoặc deadline >= hôm nay
+    `OR(NOT({Hạn chót nhận}), IS_AFTER({Hạn chót nhận}, DATEADD(TODAY(), -1, 'days')))`,
+  ];
 
   for (const key of FILTER_KEYS) {
     const raw = readParam(params, key);
