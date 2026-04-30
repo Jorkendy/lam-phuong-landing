@@ -243,8 +243,8 @@ const Navbar = () => {
               className="w-[160px] xl:w-[260px] h-auto link-menu"
             />
           </Link>
-          <div className="menu hidden md:hidden xl:block">
-            <ul className="flex gap-8">
+          <div className="menu hidden lg:block">
+            <ul className="flex gap-2 xl:gap-8">
               {MENU_ITEMS.map((menu) => {
                 const url = `/#${menu.key}`;
 
@@ -255,7 +255,7 @@ const Navbar = () => {
                       scroll={false}
                       onClick={onClick(menu)}
                       className={clsx(
-                        "text-primary px-5 py-2 rounded-3xl cursor-pointer transition link-menu",
+                        "text-primary px-3 xl:px-5 py-2 rounded-3xl cursor-pointer transition link-menu text-sm xl:text-base",
                         {
                           "bg-primary text-white":
                             activeMenu === url &&

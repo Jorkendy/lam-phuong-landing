@@ -1,4 +1,7 @@
+"use client";
+
 import Image from "next/image";
+import { useState } from "react";
 import { RouterRoot } from "@/app/constants";
 
 const SERVICES = [
@@ -30,6 +33,12 @@ const SERVICES = [
 ];
 
 const Services = () => {
+  const [activeIndex, setActiveIndex] = useState<number | null>(null);
+
+  const handleToggle = (index: number) => {
+    setActiveIndex((prev) => (prev === index ? null : index));
+  };
+
   return (
     <div id={RouterRoot.Service} className="services relative">
       <div className="container px-6 lg:px-8 mx-auto">
@@ -38,24 +47,37 @@ const Services = () => {
             <h3 className="uppercase lg:text-[48px] text-[32px] font-bold mb-4 lg:mb-10">
               Our services
             </h3>
-            {SERVICES.map(({ title, description }) => (
-              <div key={title} className="group mb-4 lg:mb-10 relative">
-                <Image
-                  src="/images/icon-animation.gif"
-                  alt=""
-                  width={100}
-                  height={100}
-                  unoptimized
-                  className="absolute left-[-85px] top-[-33px] visible h-0 group-hover:h-auto group-hover:opacity-100"
-                />
-                <h2 className="text-light capitalize font-bold lg:text-[48px] text-[32px] title cursor-pointer leading-10 lg:leading-8">
-                  {title}
-                </h2>
-                <div className="max-w-xl visible h-0 group-hover:h-auto mt-3 opacity-0 group-hover:opacity-100 transition duration-300 ease-in">
-                  <p>{description}</p>
+            {SERVICES.map(({ title, description }, index) => {
+              const isActive = activeIndex === index;
+              return (
+                <div
+                  key={title}
+                  className="mb-4 lg:mb-10 relative cursor-pointer"
+                  onClick={() => handleToggle(index)}
+                >
+                  <Image
+                    src="/images/icon-animation.gif"
+                    alt=""
+                    width={100}
+                    height={100}
+                    unoptimized
+                    className={`absolute left-[-85px] top-[-33px] transition-opacity duration-300 ${
+                      isActive ? "h-auto opacity-100" : "h-0 opacity-0"
+                    }`}
+                  />
+                  <h2 className="text-light capitalize font-bold lg:text-[48px] text-[32px] title leading-10 lg:leading-8">
+                    {title}
+                  </h2>
+                  <div
+                    className={`max-w-xl mt-3 transition-all duration-300 ease-in overflow-hidden ${
+                      isActive ? "h-auto opacity-100" : "h-0 opacity-0"
+                    }`}
+                  >
+                    <p>{description}</p>
+                  </div>
                 </div>
-              </div>
-            ))}
+              );
+            })}
           </div>
         </div>
       </div>
