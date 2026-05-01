@@ -151,8 +151,9 @@ const Navbar = () => {
   const pathname = usePathname();
 
   useGSAP(() => {
+    // Chỉ animate nav links, không animate logo để tránh ảnh hưởng LCP
     gsap.fromTo(
-      ".link-menu",
+      ".link-menu-item",
       { visibility: "visible", opacity: 0, y: 50 },
       {
         opacity: 1,
@@ -240,7 +241,7 @@ const Navbar = () => {
               height={68}
               priority
               sizes="(max-width: 1280px) 160px, 260px"
-              className="w-[160px] xl:w-[260px] h-auto link-menu"
+              className="w-[160px] xl:w-[260px] h-auto"
             />
           </Link>
           <div className="menu hidden lg:block">
@@ -255,7 +256,7 @@ const Navbar = () => {
                       scroll={false}
                       onClick={onClick(menu)}
                       className={clsx(
-                        "text-primary px-3 xl:px-5 py-2 rounded-3xl cursor-pointer transition link-menu text-sm xl:text-base",
+                        "text-primary px-3 xl:px-5 py-2 rounded-3xl cursor-pointer transition link-menu-item text-sm xl:text-base",
                         {
                           "bg-primary text-white":
                             activeMenu === url &&

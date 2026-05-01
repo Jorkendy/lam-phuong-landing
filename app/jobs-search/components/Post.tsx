@@ -1,4 +1,5 @@
 import Link from "next/link";
+import { FEATURES } from "@/app/feature-flags";
 
 type PostProps = {
   slug: string;
@@ -39,7 +40,7 @@ export default function Post({ slug, title, summary, location, deadline }: PostP
               <p className="text-light">{location}</p>
             </div>
           )}
-          {!!deadline && (
+          {FEATURES.DEADLINE_FILTER && !!deadline && (
             <div className="flex items-center gap-2">
               <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" aria-hidden="true" className="text-light">
                 <rect x="3" y="4" width="18" height="18" rx="2" ry="2" />

@@ -1,3 +1,5 @@
+import { FEATURES } from "@/app/feature-flags";
+
 export const FILTER_KEYS = [
   "job_types",
   "job_categories",
@@ -46,11 +48,13 @@ function readParam(params: ParamsLike, key: string): string | undefined {
 }
 
 export function buildJobsFilterFormula(params: ParamsLike): string {
-  const groups: string[] = [
-    `{Status}="Approved"`,
-    // Chỉ lấy job chưa hết hạn: không có deadline hoặc deadline >= hôm nay
-    `OR(NOT({Hạn chót nhận}), IS_AFTER({Hạn chót nhận}, DATEADD(TODAY(), -1, 'days')))`,
-  ];
+  const groups: string[] = [`{Status}="Approved"`];
+
+  if (FEATURES.DEADLINE_FILTER) {
+    groups.push(
+      `OR(NOT({Hạn chót nhận}), IS_AFTER({Hạn chót nhận}, DATEADD(TODAY(), -1, 'days')))`,
+    );
+  }
 
   for (const key of FILTER_KEYS) {
     const raw = readParam(params, key);

@@ -3,6 +3,7 @@ import type { Metadata } from "next";
 import Link from "next/link";
 import Markdown from "react-markdown";
 import SubscribeSection from "../../components/SubscribeSection";
+import { FEATURES } from "@/app/feature-flags";
 import { getJobDetail } from "@/app/api/job/service";
 import { GetRecordsResponse, JobFields } from "@/type";
 
@@ -130,7 +131,7 @@ export default async function Page({
         <div className="lg:max-w-6xl mx-auto lg:py-16 py-5 relative">
           <div className="flex flex-col lg:grid lg:grid-cols-3 gap-8 mt-5 lg:mt-16">
             <div className="col-span-1">
-              <SubscribeSection />
+              {FEATURES.SUBSCRIBE && <SubscribeSection />}
             </div>
             <div className="col-span-2 flex flex-col gap-8">
               <h2 className="text-light hover:text-light text-[24px] lg:text-[36px] leading-9">

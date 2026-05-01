@@ -3,6 +3,8 @@ import { useEffect, useState } from "react";
 import { useSearchParams } from "next/navigation";
 import { ChevronDown } from "lucide-react";
 import { FILTER_KEYS } from "@/app/jobs-search/lib/filter";
+import { FEATURES } from "@/app/feature-flags";
+import SubscribeSection from "./SubscribeSection";
 import Banner from "@/public/images/banner-page.png";
 import Image from "next/image";
 import Post from "./Post";
@@ -75,6 +77,7 @@ export default function ClientView({
           <div className="flex flex-col lg:grid lg:grid-cols-3 gap-8 mt-5 lg:mt-16">
             <div className="col-span-1">
               <Filter />
+              {FEATURES.SUBSCRIBE && <SubscribeSection />}
             </div>
 
             <div className="col-span-2 relative z-1">
@@ -93,7 +96,9 @@ export default function ClientView({
                   <p className="text-gray-400 max-w-sm">
                     {hasActiveFilter
                       ? "Thử thay đổi hoặc xóa bộ lọc để xem thêm cơ hội việc làm."
-                      : "Vui lòng quay lại sau hoặc liên hệ hr@lamphuong.com.vn để biết thêm thông tin."}
+                      : FEATURES.SUBSCRIBE
+                        ? "Đăng ký nhận thông báo để không bỏ lỡ khi có vị trí mới."
+                        : "Vui lòng quay lại sau hoặc liên hệ hr@lamphuong.com.vn để biết thêm thông tin."}
                   </p>
                 </div>
               ) : (
