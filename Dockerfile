@@ -38,13 +38,13 @@ RUN npm install -g pnpm && \
       --method=universal-auth \
       --client-id=$INFISICAL_CLIENT_ID \
       --client-secret=$INFISICAL_CLIENT_SECRET \
-      --domain=https://secrets2.vinhpham.com.vn \
+      --domain=https://secrets.vinhpham.com.vn \
       --plain --silent) && \
     infisical run \
       --token=$TOKEN \
       --projectId=$INFISICAL_PROJECT_ID \
       --env=$INFISICAL_ENV \
-      --domain=https://secrets2.vinhpham.com.vn \
+      --domain=https://secrets.vinhpham.com.vn \
       -- pnpm run build
 
 FROM base AS runner
@@ -73,11 +73,11 @@ CMD ["sh", "-c", "\
     --method=universal-auth \
     --client-id=$INFISICAL_CLIENT_ID \
     --client-secret=$INFISICAL_CLIENT_SECRET \
-    --domain=https://secrets2.vinhpham.com.vn \
+    --domain=https://secrets.vinhpham.com.vn \
     --plain --silent) && \
   infisical run \
     --token=$TOKEN \
     --projectId=$INFISICAL_PROJECT_ID \
     --env=$INFISICAL_ENV \
-    --domain=https://secrets2.vinhpham.com.vn \
+    --domain=https://secrets.vinhpham.com.vn \
     -- node server.js"]
