@@ -14,21 +14,28 @@ export async function generateStaticParams() {
   const slugs: { slug: string }[] = [];
   let offset: string | undefined;
 
-  do {
-    const url = `${BASE_URL}/${process.env.JOBS_TABLE}?fields[]=Slug&pageSize=100${offset ? `&offset=${offset}` : ""}`;
-    const res = await fetch(url, {
-      headers: { Authorization: `Bearer ${process.env.AIRTABLE_API_KEY}` },
-    });
-    const data: GetRecordsResponse<JobFields> = await res.json();
-    for (const record of data.records || []) {
-      if (record.fields["Slug"]) {
-        slugs.push({ slug: `${record.fields["Slug"]}-${record.id}` });
+  try {
+    do {
+      const url = `${BASE_URL}/${process.env.JOBS_TABLE}?fields[]=Slug&pageSize=100${offset ? `&offset=${offset}` : ""}`;
+      const res = await fetch(url, {
+        headers: { Authorization: `Bearer ${process.env.AIRTABLE_API_KEY}` },
+      });
+      const data: GetRecordsResponse<JobFields> = await res.json();
+      for (const record of data.records || []) {
+        if (record.fields["Slug"]) {
+          slugs.push({ slug: `${record.fields["Slug"]}-${record.id}` });
+        }
       }
-    }
-    offset = data.offset;
-  } while (offset);
+      offset = data.offset;
+    } while (offset);
 
-  return slugs;
+    return slugs;
+  } catch (error) {
+    // Mạng Airtable lỗi lúc build -> không làm chết build. Trang sẽ render
+    // on-demand lúc runtime (dynamicParams mặc định bật) rồi cache theo revalidate.
+    console.error("[generateStaticParams] fetch job slugs", error);
+    return [];
+  }
 }
 
 type JobDetail = {
