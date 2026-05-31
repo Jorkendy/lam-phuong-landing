@@ -4,6 +4,7 @@ import "../styles/globals.css";
 import Header from "@/app/components/header";
 import Footer from "@/app/components/footer";
 import ScrollReveal from "@/app/components/scroll-reveal";
+import Script from "next/script";
 
 const siteUrl = process.env.NEXT_PUBLIC_SITE_URL || "https://lamphuong.com.vn";
 const siteName = "Lam Phương";
@@ -95,6 +96,8 @@ export default function RootLayout({ children }: { children: ReactNode }) {
 
         <Footer />
         <ScrollReveal />
+
+        <Script src="https://analytics.vinhpham.com.vn/script.js" data-website-id="3bd8f72f-d23f-439a-a6e1-2142dff4d815" data-domains="lamphuong.com.vn" strategy="afterInteractive" />
       </body>
     </html>
   );
