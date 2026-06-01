@@ -1,10 +1,11 @@
 import { cache } from "react";
 import type { Metadata } from "next";
-import Link from "next/link";
 import Markdown from "react-markdown";
 import SubscribeSection from "../../components/SubscribeSection";
+import JobDetailTracking from "./JobDetailTracking";
 import { FEATURES } from "@/app/feature-flags";
 import { getJobDetail } from "@/app/api/job/service";
+import { extractJobId } from "@/lib/track";
 import { GetRecordsResponse, JobFields } from "@/type";
 
 export const revalidate = 300;
@@ -166,7 +167,10 @@ export default async function Page({
                   </div>
                 )}
               </div>
-              <div className="mb-4 [&>h3]:text-light [&>h3]:text-[22px] [&>h3]:mb-3 [&>ul]:list-disc [&>ul]:flex [&>ul]:flex-col [&>ul]:gap-3 [&>ul]:pl-5 [&>ul]:mb-5 whitespace-pre-line">
+              <div
+                id="job-detail-jd"
+                className="mb-4 [&>h3]:text-light [&>h3]:text-[22px] [&>h3]:mb-3 [&>ul]:list-disc [&>ul]:flex [&>ul]:flex-col [&>ul]:gap-3 [&>ul]:pl-5 [&>ul]:mb-5 whitespace-pre-line"
+              >
                 <h4 className="text-light text-[22px] mb-3">Job Description</h4>
                 <Markdown>{data.description}</Markdown>
 
@@ -176,14 +180,13 @@ export default async function Page({
                 <h4 className="text-light text-[22px] mb-3">Benefits</h4>
                 <Markdown>{data.benefits}</Markdown>
 
-                <Link
-                  href="https://airtable.com/applRt3FQ5QTJY6sn/pag3suI5n5zwMkT6o/form"
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="mt-10 self-start cursor-pointer text-white lg:text-[18px] border border-light bg-light rounded-3xl px-4 py-2 hover:bg-white hover:text-light inline-block"
-                >
-                  Apply Now
-                </Link>
+                <JobDetailTracking
+                  jobId={extractJobId(slug)}
+                  jobTitle={data.title || ""}
+                  jobSlug={slug}
+                  location={data.location}
+                  tags={(data.tags || []).join(",")}
+                />
               </div>
             </div>
           </div>

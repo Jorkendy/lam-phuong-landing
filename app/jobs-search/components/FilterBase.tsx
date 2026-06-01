@@ -10,6 +10,8 @@ import {
   FilterKeyEnum,
 } from "@/app/jobs-search/constants";
 import { usePathname, useRouter, useSearchParams } from "next/navigation";
+import { trackEvent } from "@/lib/track";
+import type { FilterKey } from "@/types/tracking";
 
 type FilterBaseProps = {
   filterKey: FilterKeyEnum;
@@ -53,6 +55,13 @@ export default function FilterBase({ filterKey }: FilterBaseProps) {
   const handleClick = useCallback(
     (name: string) => (event: ChangeEvent<HTMLInputElement>) => {
       const shouldAdd = event.target.checked;
+      // L7 — job_filter_apply: mỗi lần tick/bỏ tick một giá trị lọc
+      trackEvent("job_filter_apply", {
+        page_type: "jobs_list",
+        filter_key: CONFIG_BY_KEY[filterKey].key as FilterKey,
+        filter_value: name,
+        action: shouldAdd ? "add" : "remove",
+      });
       const newQueryString = createQueryString(
         CONFIG_BY_KEY[filterKey].key,
         name,

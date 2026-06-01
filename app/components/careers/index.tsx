@@ -1,6 +1,6 @@
 import Image from "next/image";
-import Link from "next/link";
 import { RouterRoot } from "@/app/constants";
+import CtaButton from "./CtaButton";
 
 const Careers = () => {
   return (
@@ -25,12 +25,7 @@ const Careers = () => {
                 nghiệp? Chúng tôi luôn tìm kiếm những tài năng xuất sắc và mong
                 được đồng hành cùng bạn trên hành trình này.
               </p>
-              <Link
-                href="/jobs-search"
-                className="text-light border border-light rounded-3xl px-4 py-3 inline-flex max-w-[160px] justify-center hover:bg-light hover:text-white"
-              >
-                Xem công việc
-              </Link>
+              <CtaButton />
             </div>
             <div className="lg:translate-y-[-100px]">
               <Image

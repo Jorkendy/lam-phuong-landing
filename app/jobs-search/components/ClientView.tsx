@@ -1,9 +1,10 @@
 "use client";
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { useSearchParams } from "next/navigation";
 import { ChevronDown } from "lucide-react";
 import { FILTER_KEYS } from "@/app/jobs-search/lib/filter";
 import { FEATURES } from "@/app/feature-flags";
+import { trackEvent } from "@/lib/track";
 import SubscribeSection from "./SubscribeSection";
 import Banner from "@/public/images/banner-page.png";
 import Image from "next/image";
@@ -32,6 +33,7 @@ export default function ClientView({
   const [offset, setOffset] = useState<string | null>(initialOffset);
   const [loading, setLoading] = useState<boolean>(false);
   const hasActiveFilter = FILTER_KEYS.some((key) => searchParams.get(key));
+  const emptyTracked = useRef(false);
 
   useEffect(() => {
     setOffset(initialOffset);
@@ -41,8 +43,28 @@ export default function ClientView({
     setRecords(data);
   }, [data]);
 
+  // L8 — jobs_empty_view: fire khi danh sách rỗng hiển thị
+  useEffect(() => {
+    if (records.length === 0) {
+      if (!emptyTracked.current) {
+        emptyTracked.current = true;
+        trackEvent("jobs_empty_view", {
+          page_type: "jobs_list",
+          has_active_filter: hasActiveFilter,
+        });
+      }
+    } else {
+      emptyTracked.current = false;
+    }
+  }, [records.length, hasActiveFilter]);
+
   const loadMore = async () => {
     if (!offset || loading) return;
+    // L6 — jobs_load_more: số job đang hiển thị ngay trước khi load thêm
+    trackEvent("jobs_load_more", {
+      page_type: "jobs_list",
+      current_count: records.length,
+    });
     setLoading(true);
     try {
       const params = new URLSearchParams(searchParams.toString());
@@ -103,8 +125,8 @@ export default function ClientView({
                 </div>
               ) : (
                 <>
-                  {records.map((item) => (
-                    <Post key={item.slug} {...item} />
+                  {records.map((item, index) => (
+                    <Post key={item.slug} {...item} position={index} />
                   ))}
 
                   {offset && (

@@ -97,7 +97,7 @@ export default function RootLayout({ children }: { children: ReactNode }) {
         <Footer />
         <ScrollReveal />
 
-        <Script src="https://analytics.vinhpham.com.vn/script.js" data-website-id="3bd8f72f-d23f-439a-a6e1-2142dff4d815" data-domains="lamphuong.com.vn" strategy="afterInteractive" />
+        <Script src="https://analytics.vinhpham.com.vn/script.js" data-website-id="3bd8f72f-d23f-439a-a6e1-2142dff4d815" data-domains="lamphuong.com.vn,localhost" strategy="afterInteractive" />
       </body>
     </html>
   );

@@ -1,6 +1,7 @@
 "use client";
 
 import { ChangeEvent, useCallback, useState } from "react";
+import { trackEvent } from "@/lib/track";
 
 type Status = "idle" | "loading" | "success" | "error";
 
@@ -18,9 +19,16 @@ export default function SubscribeSection() {
   const onSubmit = useCallback(async () => {
     if (status === "loading") return;
     if (!EMAIL_RE.test(email)) {
+      // L2c — validate client thất bại
+      trackEvent("job_alert_subscribe_error", {
+        page_type: "jobs_list",
+        reason: "invalid_email",
+      });
       setStatus("error");
       return;
     }
+    // L2a — submit hợp lệ phía client
+    trackEvent("job_alert_subscribe_submit", { page_type: "jobs_list" });
     setStatus("loading");
     try {
       const res = await fetch("/api/subscribe", {
@@ -30,13 +38,24 @@ export default function SubscribeSection() {
       });
       const data = await res.json().catch(() => ({ ok: false }));
       if (data.ok) {
+        // L2b — ghi Airtable thành công
+        trackEvent("job_alert_subscribe_success", { page_type: "jobs_list" });
         setStatus("success");
         setEmail("");
       } else {
+        // L2c — API trả lỗi
+        trackEvent("job_alert_subscribe_error", {
+          page_type: "jobs_list",
+          reason: "server_error",
+        });
         setStatus("error");
       }
     } catch (error) {
       console.error("[subscribe]", error);
+      trackEvent("job_alert_subscribe_error", {
+        page_type: "jobs_list",
+        reason: "server_error",
+      });
       setStatus("error");
     }
   }, [status, email]);

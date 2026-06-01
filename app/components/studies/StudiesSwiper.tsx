@@ -1,8 +1,11 @@
 "use client";
 import Image from "next/image";
+import { useRef } from "react";
 import { Swiper, SwiperSlide } from "swiper/react";
 import { Autoplay } from "swiper/modules";
+import type { Swiper as SwiperClass } from "swiper/types";
 import "swiper/css";
+import { trackEvent } from "@/lib/track";
 
 export type Study = {
   image: string;
@@ -12,6 +15,21 @@ export type Study = {
 };
 
 export default function StudiesSwiper({ studies }: { studies: Study[] }) {
+  // case_study_view (H4): fire một lần/phiên cho mỗi slide thực sự hiển thị
+  const seen = useRef<Set<number>>(new Set());
+
+  const trackSlide = (swiper: SwiperClass) => {
+    const index = swiper.realIndex;
+    const study = studies[index];
+    if (!study || seen.current.has(index)) return;
+    seen.current.add(index);
+    trackEvent("case_study_view", {
+      page_type: "home",
+      case_study_name: study.tag,
+      position: index,
+    });
+  };
+
   return (
     <Swiper
       slidesPerView={1.2}
@@ -26,6 +44,8 @@ export default function StudiesSwiper({ studies }: { studies: Study[] }) {
         1024: { slidesPerView: 3.7, spaceBetween: 30 },
       }}
       modules={[Autoplay]}
+      onSwiper={trackSlide}
+      onSlideChange={trackSlide}
     >
       {studies.map(({ image, tag, title, description }) => (
         <SwiperSlide key={image}>

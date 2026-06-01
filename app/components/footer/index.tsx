@@ -1,4 +1,5 @@
 import Image from "next/image";
+import ContactEmailLink from "./ContactEmailLink";
 
 const Footer = () => {
   return (
@@ -28,9 +29,7 @@ const Footer = () => {
             <div className="max-w-64">
               <p>Contact:</p>
               <p>
-                <a href="mailto:hr@lamphuong.com.vn" className="hover:text-light">
-                  hr@lamphuong.com.vn
-                </a>
+                <ContactEmailLink />
               </p>
             </div>
           </div>

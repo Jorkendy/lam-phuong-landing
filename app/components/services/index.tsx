@@ -1,8 +1,9 @@
 "use client";
 
 import Image from "next/image";
-import { useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { RouterRoot } from "@/app/constants";
+import { trackEvent } from "@/lib/track";
 
 const SERVICES = [
   {
@@ -34,9 +35,45 @@ const SERVICES = [
 
 const Services = () => {
   const [activeIndex, setActiveIndex] = useState<number | null>(null);
+  const cardRefs = useRef<(HTMLDivElement | null)[]>([]);
+
+  // service_view (H2): mỗi card ≥50% trong viewport, fire một lần/phiên/phần tử
+  useEffect(() => {
+    const observer = new IntersectionObserver(
+      (entries) => {
+        for (const entry of entries) {
+          if (!entry.isIntersecting) continue;
+          const index = Number(
+            (entry.target as HTMLElement).dataset.serviceIndex,
+          );
+          trackEvent("service_view", {
+            page_type: "home",
+            service_name: SERVICES[index].title,
+            position: index,
+          });
+          observer.unobserve(entry.target);
+        }
+      },
+      { threshold: 0.5 },
+    );
+
+    cardRefs.current.forEach((el) => el && observer.observe(el));
+    return () => observer.disconnect();
+  }, []);
 
   const handleToggle = (index: number) => {
-    setActiveIndex((prev) => (prev === index ? null : index));
+    setActiveIndex((prev) => {
+      const isOpening = prev !== index;
+      if (isOpening) {
+        // service_expand (H3): chỉ fire khi mở (expand) một service
+        trackEvent("service_expand", {
+          page_type: "home",
+          service_name: SERVICES[index].title,
+          position: index,
+        });
+      }
+      return isOpening ? index : null;
+    });
   };
 
   return (
@@ -52,6 +89,10 @@ const Services = () => {
               return (
                 <div
                   key={title}
+                  ref={(el) => {
+                    cardRefs.current[index] = el;
+                  }}
+                  data-service-index={index}
                   className="mb-4 lg:mb-10 relative cursor-pointer"
                   onClick={() => handleToggle(index)}
                 >

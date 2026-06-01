@@ -1,5 +1,12 @@
+"use client";
+
 import Link from "next/link";
+import { useEffect, useRef } from "react";
 import { FEATURES } from "@/app/feature-flags";
+import { extractJobId, trackEvent } from "@/lib/track";
+
+const APPLY_URL =
+  "https://airtable.com/applRt3FQ5QTJY6sn/pag3suI5n5zwMkT6o/form";
 
 type PostProps = {
   slug: string;
@@ -7,6 +14,7 @@ type PostProps = {
   summary: string;
   location: string;
   deadline?: string | null;
+  position: number;
 };
 
 function formatDeadline(dateStr: string): string {
@@ -18,13 +26,63 @@ function formatDeadline(dateStr: string): string {
   });
 }
 
-export default function Post({ slug, title, summary, location, deadline }: PostProps) {
+export default function Post({
+  slug,
+  title,
+  summary,
+  location,
+  deadline,
+  position,
+}: PostProps) {
+  const articleRef = useRef<HTMLElement | null>(null);
+
+  const jobContext = {
+    job_id: extractJobId(slug),
+    job_title: title,
+    job_slug: slug,
+    location,
+  };
+
+  // L3 — job_card_view: card ≥50% trong viewport, fire một lần/phiên/phần tử
+  useEffect(() => {
+    const el = articleRef.current;
+    if (!el) return;
+    const observer = new IntersectionObserver(
+      (entries) => {
+        for (const entry of entries) {
+          if (!entry.isIntersecting) continue;
+          trackEvent("job_card_view", {
+            page_type: "jobs_list",
+            ...jobContext,
+            position,
+          });
+          observer.unobserve(entry.target);
+        }
+      },
+      { threshold: 0.5 },
+    );
+    observer.observe(el);
+    return () => observer.disconnect();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [slug]);
+
   return (
-    <article className="group rounded-3xl p-4 border border-light shadow-[0_2px_0_rgba(66,157,165,1)] flex flex-col gap-4 mb-6 bg-white">
+    <article
+      ref={articleRef}
+      className="group rounded-3xl p-4 border border-light shadow-[0_2px_0_rgba(66,157,165,1)] flex flex-col gap-4 mb-6 bg-white"
+    >
       <h2 className="text-[24px] lg:text-[36px] leading-9">
         <Link
           href={`/jobs-search/chi-tiet/${slug}`}
           className="group-hover:text-light hover:text-light"
+          onClick={() =>
+            trackEvent("job_view", {
+              page_type: "jobs_list",
+              ...jobContext,
+              position,
+              source: "list",
+            })
+          }
         >
           {title}
         </Link>
@@ -56,11 +114,19 @@ export default function Post({ slug, title, summary, location, deadline }: PostP
         </div>
 
         <Link
-          href="https://airtable.com/applRt3FQ5QTJY6sn/pag3suI5n5zwMkT6o/form"
+          href={APPLY_URL}
           target="_blank"
           rel="noopener noreferrer"
           aria-label={`Ứng tuyển vị trí ${title}`}
           className="cursor-pointer text-light lg:text-[18px] border border-light rounded-3xl px-4 py-1 hover:bg-light hover:text-white inline-block"
+          onClick={() =>
+            trackEvent("apply_click", {
+              page_type: "jobs_list",
+              ...jobContext,
+              source: "list",
+              destination_url: APPLY_URL,
+            })
+          }
         >
           Apply Now
         </Link>
